@@ -1,21 +1,21 @@
 pipeline {
-    agent {
-        label 'master'
+    agent any
+
+    tools {
+        maven 'Maven-3.9.12'
     }
+
     stages {
+
         stage('Build') {
             steps {
                 bat 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Test') { 
+
+        stage('Test') {
             steps {
-                bat 'mvn test' 
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml' 
-                }
+                bat 'mvn test'
             }
         }
     }
