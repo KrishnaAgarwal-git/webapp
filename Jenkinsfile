@@ -24,11 +24,18 @@ pipeline {
             }
         }
 
+        stage('Sonar-Report') {
+            steps {
+                withSonarQubeEnv('SonarQube-Server') {
+                    bat 'mvn clean verify sonar:sonar'
+                }
+            }
+        }
+
         stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
-
     }
 }
