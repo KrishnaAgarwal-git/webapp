@@ -7,15 +7,20 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                checkout scm
+                bat 'mvn -B -DskipTests clean package'
             }
         }
 
-        stage('Build') {
+        stage('Test') { 
             steps {
-                bat 'mvn clean package'
+                bat 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
@@ -24,5 +29,6 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
+
     }
 }
