@@ -13,7 +13,7 @@ pipeline {
             }
         }
 
-        stage('Test') { 
+        stage('Test') {
             steps {
                 bat 'mvn test'
             }
@@ -24,15 +24,15 @@ pipeline {
             }
         }
 
-        stage('Sonar-Report') {
+        stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
-                    bat 'mvn clean verify sonar:sonar'
+                    bat 'mvn verify sonar:sonar'
                 }
             }
         }
 
-        stage('Archive') {
+        stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
