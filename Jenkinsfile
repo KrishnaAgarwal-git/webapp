@@ -27,20 +27,32 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
-                    bat 'mvn clean verify sonar:sonar -Dsonar.projectKey=webapp'
+                    bat 'mvn verify sonar:sonar -Dsonar.projectKey=webapp'
                 }
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
-                bat 'mvn deploy -DskipTests'
+                bat 'mvn deploy -DskipTests -f pom.xml'
             }
         }
 
         stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                bat '''
+                echo Killing old app on port 9999...
+                for /f "tokens=5" %%a in ('netstat -ano ^| findstr :9999') do taskkill /PID %%a /F
+
+                echo Starting new app...
+                start java -jar target/java-webapp-1.0.jar
+                '''
             }
         }
     }
