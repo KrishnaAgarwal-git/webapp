@@ -51,7 +51,7 @@ pipeline {
                 for /f "tokens=5" %%a in ('netstat -ano ^| findstr :9999') do taskkill /PID %%a /F
 
                 echo Starting new app...
-                start java -jar target/java-webapp-1.0.jar
+                cmd /c start "" /B java -jar target/java-webapp-1.0.jar
                 '''
             }
         }
