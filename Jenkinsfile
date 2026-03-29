@@ -32,6 +32,12 @@ pipeline {
             }
         }
 
+        stage('Deploy to Nexus') {
+            steps {
+                bat 'mvn deploy -DskipTests'
+            }
+        }
+
         stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
