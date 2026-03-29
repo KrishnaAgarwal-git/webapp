@@ -27,7 +27,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
-                    bat 'mvn verify sonar:sonar'
+                    bat 'mvn clean verify sonar:sonar -Dsonar.projectKey=webapp'
                 }
             }
         }
